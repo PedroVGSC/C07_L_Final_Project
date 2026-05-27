@@ -1,8 +1,3 @@
-Segue o código completo com as últimas atualizações: **duas roles**, cadastro do **Neymar via procedure**, uso da **function de saldo de gols** e a **procedure de teste da trigger com Robinho Junior menor de 15 anos**. Usei como base o script que você mandou. 
-
-Também deixei o arquivo pronto aqui: [baixar SQL completo atualizado](sandbox:/mnt/data/brasileirao2026_completo_atualizado_final.sql)
-
-```sql
 DROP DATABASE IF EXISTS brasileirao2026;
 CREATE DATABASE brasileirao2026;
 USE brasileirao2026;
@@ -443,4 +438,3 @@ INNER JOIN Clube cv
 ON p.id_clube_visitante = cv.id_clube;
 
 SELECT * FROM vw_classificacao;
-```
