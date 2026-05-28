@@ -271,6 +271,8 @@ DELIMITER ;
 
 DELIMITER $$
 
+# Trigger
+
 CREATE TRIGGER trg_validar_idade_jogador
 BEFORE INSERT
 ON Jogador
@@ -284,7 +286,7 @@ END $$
 
 DELIMITER ;
 
-CREATE VIEW vw_classificacao AS
+CREATE VIEW classificacao_completa AS
 SELECT
     c.nome AS clube,
     (p.vitorias * 3) + (p.empates * 1) AS pontos,
@@ -317,10 +319,8 @@ GRANT 'role_operador' TO 'operador'@'localhost';
 SET DEFAULT ROLE 'role_analista' TO 'analista'@'localhost';
 SET DEFAULT ROLE 'role_operador' TO 'operador'@'localhost';
 
--- =====================================================
--- CADASTRAR NEYMAR USANDO PROCEDURE
--- A TRIGGER VALIDA A IDADE AUTOMATICAMENTE
--- =====================================================
+# Cadastro de jogador para testar proceudre e trigger
+
 SET @id_santos = (
     SELECT id_clube
     FROM Clube
@@ -337,6 +337,25 @@ CALL sp_cadastrar_jogador(
     @id_santos
 );
 
+
+#Teste do trigger
+
+CALL sp_cadastrar_jogador(
+    'Joazindo da Silva',
+    'Brasil',
+    21,
+    'Atacante',
+    10,
+    (
+        SELECT id_clube
+        FROM Clube
+        WHERE nome = 'Palmeiras'
+        LIMIT 1
+    )
+);
+
+# Verificacao de adicao de jogador
+
 SELECT
     j.nome AS jogador,
     j.nacionalidade,
@@ -349,9 +368,8 @@ INNER JOIN Clube c
 ON j.id_clube = c.id_clube
 WHERE j.nome = 'Neymar';
 
--- =====================================================
--- USAR FUNCTION PARA SALDO DE GOLS EM UMA PARTIDA
--- =====================================================
+# Select com Function Saldo de gols
+
 SELECT
     p.id_partida,
     cm.nome AS mandante,
@@ -365,46 +383,12 @@ INNER JOIN Clube cm
 ON p.id_clube_mandante = cm.id_clube
 INNER JOIN Clube cv
 ON p.id_clube_visitante = cv.id_clube
-WHERE p.id_partida = 1;
+WHERE p.id_partida = 3;
 
--- =====================================================
--- PROCEDURE DE TESTE DA TRIGGER
--- =====================================================
-DELIMITER $$
-
-CREATE PROCEDURE sp_teste_trigger_robinho_junior()
-BEGIN
-    DECLARE v_id_santos INT;
-
-    SELECT id_clube
-    INTO v_id_santos
-    FROM Clube
-    WHERE nome = 'Santos'
-    LIMIT 1;
-
-    CALL sp_cadastrar_jogador(
-        'Robinho Junior',
-        'Brasil',
-        14,
-        'Atacante',
-        7,
-        v_id_santos
-    );
-END $$
-
-DELIMITER ;
-
--- Para testar a trigger, descomente a linha abaixo.
--- O erro esperado é:
--- ERROR 1644 (45000): Jogador deve possuir pelo menos 15 anos
-
--- CALL sp_teste_trigger_robinho_junior();
-
-SELECT *
-FROM Jogador
-WHERE nome = 'Robinho Junior';
 
 SELECT * FROM Clube;
+
+# Select jogador e clube
 
 SELECT
     Jogador.nome AS jogador,
@@ -412,6 +396,8 @@ SELECT
 FROM Jogador
 INNER JOIN Clube
 ON Jogador.id_clube = Clube.id_clube;
+
+# Select parcial da tabela 
 
 SELECT
     Clube.nome,
@@ -423,6 +409,8 @@ FROM Participacao
 INNER JOIN Clube
 ON Participacao.id_clube = Clube.id_clube
 ORDER BY pontos DESC;
+
+# Select das partidas
 
 SELECT
     p.id_partida,
@@ -437,4 +425,6 @@ ON p.id_clube_mandante = cm.id_clube
 INNER JOIN Clube cv
 ON p.id_clube_visitante = cv.id_clube;
 
-SELECT * FROM vw_classificacao;
+# Select completo da tabela com view
+
+SELECT * FROM classificacao_completa;
