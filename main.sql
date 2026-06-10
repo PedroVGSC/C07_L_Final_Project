@@ -428,3 +428,19 @@ ON p.id_clube_visitante = cv.id_clube;
 # Select completo da tabela com view
 
 SELECT * FROM classificacao_completa;
+
+# ---------------------------------------------------------------------------
+# SELECT * de TODAS as tabelas
+# Permite visualizar o estado completo do banco e acompanhar, em tempo real,
+# as mudancas feitas pelo backend Python (INSERT/UPDATE/DELETE) acontecendo
+# simultaneamente. Basta reexecutar este bloco apos cada alteracao.
+# ---------------------------------------------------------------------------
+
+SELECT * FROM Estadio;
+SELECT * FROM Treinador;
+SELECT * FROM Clube;
+SELECT * FROM Jogador;
+SELECT * FROM Competicao;
+SELECT * FROM Temporada;
+SELECT * FROM Participacao;
+SELECT * FROM Partida;

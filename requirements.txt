@@ -1,0 +1,2 @@
+# Python + MySQL Integration - Requirements
+mysql-connector-python==8.2.0
